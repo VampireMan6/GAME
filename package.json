@@ -1,0 +1,20 @@
+{
+  "name": "game",
+  "version": "1.0.0",
+  "description": "",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "eosjs": "^21.0.2",
+    "eosjs-api": "^7.0.4",
+    "eosjs-ecc": "^4.0.7",
+    "es6-promise": "^4.2.8",
+    "isomorphic-fetch": "^2.2.1",
+    "node-fetch": "^2.6.0",
+    "text-encoding": "^0.7.0"
+  }
+}

@@ -1,0 +1,503 @@
+<template>
+	<view>
+		<!-- 自治社区 -->
+		<view :style="{ height: statusBarHeight + 'px' }"></view>
+		<view class="content1" style="margin-top: 40rpx;">
+			<image class="image_15" src="../../static/images/find_1.png" mode=""></image>
+			<text class="text">自治社区</text>
+		</view>
+		<view class="content2">
+			<image class='image2' src="../../static/images/find_4.png" mode=""></image>
+			<view class="text2">
+				<view>
+					<text class="text2-1">投票中心</text>
+					<text class="text2-2" style="color: #A7B9F1;font-size: 26rpx;">参与投票</text>
+				</view>
+				<div class="" style="width: 160upx;height: 70upx;border-radius: 50upx;background-color: #FFFFFF;" @tap="enter('vote')">
+					<text style="font-size: 30rpx;color: #145AE3;font-weight: 600;line-height: 70rpx;text-align: center;">立即参与</text>
+				</div>
+			</view>
+		</view>
+		<!-- TOOL -->
+		<view class="content1">
+			<image class="image_15" src="../../static/images/find_2.png" mode=""></image>
+			<text class="text">TOOL</text>
+		</view>
+		<view class="content2">
+			<image class='image2' src="../../static/images/find_5.png" mode=""></image>
+			<view class="text2">
+				<view>
+					<text class="text2-1">一键发币</text>
+				</view>
+				<div class="" style="width: 160upx;height: 70upx;border-radius: 50upx;background-color: #FFFFFF;" @tap="enter('onekey')">
+					<text style="font-size: 30rpx;color: #145AE3;font-weight: 600;line-height: 70rpx;text-align: center;">立即参与</text>
+				</div>
+			</view>
+		</view>
+		<!-- DAPP -->
+		<view class="content1" v-if="dataList.length !== 0">
+			<image class="image_15" src="../../static/images/find_3.png" mode=""></image>
+			<text class="text">DAPP</text>
+		</view>
+		<view class="content2" v-for="(item,i) in dataList" :key="i">
+			<image class='image2' src="../../static/images/find_6.png" mode=""></image>
+			<view class="text2">
+				<view>
+					<text class="text2-1">{{item.name}}</text>
+					<text class="text2-2" style="color: #A7B9F1;font-size: 26rpx;">{{item.introduction}}</text>
+				</view>
+				<div class="" style="width: 160upx;height: 70upx;border-radius: 50upx;background-color: #FFFFFF;" @tap="enterDapp(item)">
+					<text style="font-size: 30rpx;color: #145AE3;font-weight: 600;line-height: 70rpx;text-align: center;">立即参与</text>
+				</div>
+			</view>
+		</view>
+		<uni-popup ref="tipPop1" type="bottom">
+			<view class="choose-pop">
+				<view class="pop-close-v" @tap="close">
+					<image class="image_30" src="../../static/images/delect_0.png" @tap="close"></image>
+				</view>
+				<view class="pop-content">
+					<text class="text-center pop-title">您正在访问第三方DApp</text>
+					<text class="text-center font-gray font-small">你在第三方DApp上的使用行为将适用该第三方DApp的《用户协议》和《隐私政策》，由{{text}}直接并单独向你承担责任。</text>
+				</view>
+				<button class="button" @tap="btnClick"><text class="btn-text">确认</text></button>
+			</view>
+		</uni-popup>
+		<update v-if="updataStatus" :updateData="updateData" @evenUpdate="evenUpdate"></update>
+	</view>
+</template>
+
+<script>
+	import update from '@/components/update1.vue'
+	import { _toast } from '@/common/js/funs'
+	import { url3 } from '@/common/js/api.js'
+	
+	import uniPopup from '@/components/uni-popup/uni-popup.vue'
+	const globalEvent = weex.requireModule('globalEvent');
+	
+	export default {
+		onLoad() {
+			
+			// #ifdef APP-PLUS
+			this.update();
+			// #endif
+			let DappList = uni.getStorageSync('DappList');
+			this.dataList = DappList;
+		},
+		onShow() {
+			let index = uni.getStorageSync('accountIndex');//账户下标选择
+			let value = uni.getStorageSync('accountList');//账户列表
+			this.account_name = value[index].account;
+			let number = uni.getStorageSync('gameCoinNumber');//账户game币数量
+			this.gameNumber = number;
+		},
+		mounted() {
+			this.statusBarHeight = uni.getSystemInfoSync().statusBarHeight;
+			globalEvent.addEventListener("plusMessage", e => {
+				uni.$emit('callAPI', e.data);
+			});
+			let self = this;
+			uni.$on('callAPI', function(data) {
+				data.time = data.time || "";
+				if (data.method) {
+					if (data.method)
+						switch (data.method) {
+							case 'navigator.getOrientation':
+								{
+									let v = plus.navigator.getOrientation();
+									let result = 'PORTRAIT';
+									if (v == 90 || v == -90) {
+										result = 'LANDSCAPE';
+									}
+									if (data.time != "") {
+										self.wv.evalJS(`methods['native.getOrientation${data.time}']('${result}')`);
+									}
+								}
+								break;
+							case 'navigator.setOrientation':
+								{
+									if (data.options !== 'portrait' || data.options == 'landscape') {
+										plus.screen.lockOrientation(data.options);
+									}
+								}
+								break;
+							case 'navigator.closeDapp':
+								self.wv.close('pop-out', 200);
+								break;
+							case 'navigator.goBack':
+								self.wv.navigateBack();
+								break;
+							case 'navigator.configure':
+								self.wv.configure(data.options);
+								break;
+							case 'navigator.routeTo':
+								break;
+							case 'native.alert':
+								self.alert(data.options, data.time);
+								break;
+							case 'native.confirm':
+								self.confirm(data.options, data.time);
+								break;
+							case 'native.selectPicture':
+								break;
+							case 'native.setClipboard':
+								self.setClipboard(data.options, data.time);
+								break;
+							case 'native.share':
+								break;
+							case 'native.scanQRCode':
+								self.scanQRCode(data.options, data.time);
+								break;
+							case 'native.showAccountSwitch':
+								break;
+							case 'native.getCurrentLanguage':
+								if (data.time != "") {
+									self.wv.evalJS(`methods['native.getCurrentLanguage${data.time}']('zh-CN')`);
+								}
+								break;
+							case 'native.getCurrentCurrency':
+								if (data.time != "") {
+									self.wv.evalJS(`methods['native.getCurrentCurrency${data.time}']('USDT')`);
+								}
+								break;
+							case 'transaction.tokenPay':
+								self.tokenPay(data.options, data.time);
+								break;
+						}
+				}
+				console.log(data)
+			})
+		},
+		components: {
+			uniPopup
+		},
+		data() {
+			return {
+				statusBarHeight: "",
+				dataList: [],
+				text: "",
+				data: {},
+				account_name: "",
+				gameNumber: 0,
+				updataStatus: false,
+				updateData: {}
+			}
+		},
+		components: {
+			update
+		},
+		methods: {
+			update() {
+				plus.runtime.getProperty(plus.runtime.appid, (info)=> {
+					let self = this;
+					uni.request({
+						url: url3 + "update?ver=" + info.version,
+						method: 'POST',
+						data: {},
+						success: (data)=> {
+							let item = data.data;
+							if (item.status == 1) {
+								if (plus.os.name.toLowerCase() == "ios") {
+									if (item.data.IOS.length == 0) {
+										return;
+									}
+								} else {
+									if (item.data.Android.length == 0) {
+										return;
+									}
+								};
+								this.updataStatus = true;
+								this.updateData = item;
+							}else {
+								this.updataStatus = false;
+							}
+						}
+					})
+				})
+			},
+			evenUpdate(i) {
+				if(i == 1) {
+					this.updataStatus = false;
+				}else {
+					this.updataEven();
+				}
+			},
+			updataEven() {
+				let url = this.updateData.data.Android;
+				if (plus.os.name.toLowerCase() == "ios") {
+					url = this.updateData.data.IOS;
+				};
+				plus.nativeUI.showWaiting("正在下载更新文件...");
+				uni.downloadFile({
+					url: url,
+					success: result => {
+						plus.nativeUI.closeWaiting();
+						if(result.statusCode === 200){
+							 plus.nativeUI.showWaiting("正在安裝更新文件...");
+							 plus.runtime.install(result.tempFilePath, { force: true }, () => {
+								 plus.nativeUI.closeWaiting();
+								 plus.nativeUI.alert("应用更新完成！即将重启",function(){
+								    plus.runtime.restart();
+								 });
+							 }, () => { plus.nativeUI.closeWaiting(); _toast('更新失败'); })
+						}else{
+							_toast('下载失败');
+						}
+					},
+					fail: err => { plus.nativeUI.closeWaiting(); _toast('下载失败'); }
+				})
+			},
+			enter(options) {
+				if(options == "vote") {
+					uni.navigateTo({
+						url: '/pages/Find/Vote/vote'
+					})
+				}else if(options == 'onekey') {
+					if(parseFloat(this.gameNumber) < 10) {
+						uni.showToast({
+							title: "该账户GAME币余额不足,无法发币哦",
+							icon: "none",
+							mask: true
+						})
+					}else {
+						uni.navigateTo({
+							url: '/pages/Find/Onekey/onekey'
+						})
+					}
+				}
+			},
+			enterDapp(item) {
+				this.text = item.name;
+				this.data = item;
+				this.$refs.tipPop1.open();
+			},
+			close() {
+				this.$refs.tipPop1.close();
+			},
+			btnClick() {
+				this.openDApp();
+				this.$refs.tipPop1.close();
+			},
+			openDApp() {
+				let self = this;
+			
+				this.$refs.tipPop1.close();
+			
+				function clickButton() {
+			
+				}
+			
+				function Refresh() {
+					self.wv.reload();
+				}
+			
+				function Close() {
+					self.wv.close('pop-out', 200);
+				}
+				// console.log(plus.io.convertAbsoluteFileSystem(plus.io.convertLocalFileSystemURL('hybrid/test.js')))
+				//this.app.url="http://admin.test.8kpay.com:9999/tt.html";
+				// let url = this.app.url + "?protocol=" + this.wallet.Protocol;
+				let url = this.data.url;
+				if (this.data.isauth == 1) {
+					url = url + '?address=' + this.account_name;
+				}
+				self.wv = plus.webview.create(url, 'DApp', {
+					'backButtonAutoControl': 'close',
+					'popGesture': 'close',
+					'errorPage': '@/hybrid/html/error.html',
+					'titleNView': {
+						'style': 'transparent',
+						'backgroundColor': '#F3F3F3',
+						'titleText': this.data.name,
+						'titleColor': '#333',
+						'autoBackButton': true,
+						'progress': {
+							color: '#0000FF'
+						},
+						'buttons': [{
+							'text': '...',
+							'float': 'right',
+							'onclick': clickButton
+						}, {
+							'text': 'x',
+							'float': 'right',
+							'onclick': Close
+						}]
+					}
+				});
+				self.wv.addEventListener("close", function() {
+					let v = plus.navigator.getOrientation();
+					if (v != 0) {
+						plus.screen.lockOrientation('portrait'); //锁死屏幕方向为横屏  
+					}
+				});
+			
+				var currentWebview = this.$scope.$getAppWebview(); //此对象相当于html5plus里的plus.webview.currentWebview()。在uni-app里vue页面直接使用plus.webview.currentWebview()无效，非v3编译模式使用this.$mp.page.$getAppWebview()
+			
+				//self.wv.addEventListener('titleUpdate')
+			
+				self.wv.addEventListener('titleUpdate', function() {
+					if (uni.getSystemInfoSync().platform == 'android') {
+						self.wv.evalJS(
+							`if(!etxToken){ var id=${currentWebview.id};var methods={};var helper=function(){this.callAPI=function(apiName,options,callback){var time=(new Date()).valueOf();if(typeof options=='function'){callback=options;options=''}if(callback){console.log('ddd');methods[apiName+time]=callback}else{time=''}var model={method:apiName,time:time,options:options};plus.webview.postMessageToUniNView(model,id)}};var etxToken=new helper();}`
+						)
+						console.log(
+							`var id=${currentWebview.id};var methods={};var helper=function(){this.callAPI=function(apiName,options,callback){var time=(new Date()).valueOf();if(typeof options=='function'){callback=options;options=''}if(callback){console.log('ddd');methods[apiName+time]=callback}else{time=''}var model={method:apiName,time:time,options:options};plus.webview.postMessageToUniNView(model,id)}};var etxToken=new helper();`
+						)
+					} else {
+						self.wv.evalJS(
+							`if(!etxToken){var methods={};var helper=function(){this.callAPI=function(apiName,options,callback){var time=(new Date()).valueOf();if(typeof options=='function'){callback=options;options=''}if(callback){methods[apiName+time]=callback}else{time=''}var model={method:apiName,time:time,options:options};plus.webview.currentWebview().opener().evalJS('getApp().globalData.callAPI('+JSON.stringify(model)+')')}};var etxToken=new helper();}`
+						);
+					}
+				});
+				self.wv.show('pop-in', 200);
+			},
+			tokenPay: function(options, time) {
+				let self = this;
+				uni.$once('payresult', function(data) {
+					if (data.hash == '') {
+						self.wv.evalJS(` methods['transaction.tokenPay${time}'](false,'')`);
+					} else {
+						self.wv.evalJS(` methods['transaction.tokenPay${time}'](true,'${data.hash}')`);
+					}
+				});
+				let data = {
+					to: options.to,
+					money: options.money,
+					memo: options.memo,
+					name: options.name
+				};
+				uni.navigateTo({
+					url: `/pages/Wallet/Transaction/out1?data=${JSON.stringify(data)}`
+				})
+			},
+			configure: function(options) {
+				options = options || {};
+				options.titleColor = options.titleColor || '#ffffff';
+				options.backgroundColor = options.backgroundColor || '#ffffff';
+				this.wv.setStyle({
+					titleNView: {
+						titleColor: options.titleColor,
+						backgroundColor: options.backgroundColor
+					}
+				})
+			},
+			alert: function(message, time) {
+				let self = this;
+				uni.showModal({
+					title: '提示',
+					content: message,
+					showCancel: false,
+					success: function(res) {
+						if (time != "") {
+							if (res.confirm) {
+								self.wv.evalJS(` methods['native.alert${time}'](true)`);
+							} else if (res.cancel) {
+								self.wv.evalJS(` methods['native.alert${time}'](false)`);
+							}
+						}
+					}
+				});
+			},
+			confirm: function(options, time) {
+				let self = this;
+			
+				// {
+				//  title: 'quick question',
+				// message: 'is Javascript the worst language?',
+				// cancelText: 'no',
+				//  confirmText: 'yes',
+				//}
+				uni.showModal({
+					title: options.title,
+					content: options.message,
+					confirmText: options.confirmText,
+					cancelText: options.cancelText,
+					success: function(res) {
+						if (time != "") {
+							if (res.confirm) {
+								self.wv.evalJS(` methods['native.confirm${time}'](true)`);
+							} else if (res.cancel) {
+								self.wv.evalJS(` methods['native.confirm${time}'](false)`);
+							}
+						}
+					}
+				});
+			},
+			setClipboard: function(message, time) {
+				let self = this;
+				uni.setClipboardData({
+					data: message,
+					success() {
+						if (time != "") {
+							self.wv.evalJS(` methods['native.setClipboard${time}'](true)`);
+						}
+					},
+				})
+			},
+			scanQRCode: function(message, time) {
+				let self = this;
+				uni.scanCode({
+					success: function(res) {
+						if (time != "") {
+							self.wv.evalJS(` methods['native.scanQRCode${time}'](true,'${res.result}')`);
+						}
+					},
+					fail: function() {
+						if (time != "") {
+							self.wv.evalJS(` methods['native.scanQRCode${time}'](false)`);
+						}
+			
+					}
+				})
+			},
+		}
+	}
+</script>
+
+<style lang="scss" scoped>
+	.content1 {	padding: 0 32rpx;	width: 750rpx;	flex-direction: row;margin-bottom: 40rpx;}
+	.text {margin-left: 20rpx;font-size: 30rpx;font-weight: 600;}
+	.image_15 {	width: 30rpx;	height: 30rpx;}
+	.image_30 {	width: 40rpx;	height: 40rpx;}
+	.content2 { position: relative; width: 750rpx;height: 160rpx;padding: 0 32rpx;margin-bottom: 60rpx;}
+	.image2 { position: absolute; width: 686rpx;height: 160rpx;z-index:1};
+	.text2 { position: absolute;width: 686rpx;height: 160rpx;flex-direction: row;padding: 0 20rpx;align-items: center;justify-content: space-between; }
+	.text2-1 {font-size: 30rpx;color: #FFFFFF;margin-bottom: 16rpx;}
+	.choose-pop {
+		width: 750upx;
+		background-color: #F5F9FC;
+		border-radius: 12upx;
+		padding: 32upx;
+	}
+	
+	.pop-close-v {
+		width: 50upx;
+		height: 50upx;
+		align-items: center;
+		justify-content: center;
+	}
+	
+	.pop-close {
+		width: 26upx;
+		height: 26upx;
+		margin-bottom: 20upx;
+	}
+	
+	.pop-content {
+		background-color: #FFFFFF;
+		border-radius: 8upx;
+		padding: 50upx 40upx;
+		margin-bottom: 20upx;
+		align-items: center;
+	}
+	
+	.pop-title {
+		margin-bottom: 30upx;
+	}
+	
+	.pop-logo {	width: 100upx;	height: 100upx;	margin-bottom: 20upx;}
+	
+	.button {flex: 1;}
+	.btn-text {height: 100rpx;line-height: 100rpx;}
+</style>

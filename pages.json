@@ -1,0 +1,285 @@
+{
+	"pages": [
+		{//启动页面
+			"path": "pages/StartUp/startUp",
+			"style": {
+				"navigationBarTitleText": "",
+				"navigationStyle": "custom",
+				"app-plus": {
+					"bounce": "none"
+				}
+			}
+		},
+		{//钱包
+			"path": "pages/Wallet/wallet",
+			"style": {
+				"navigationBarTitleText": "",
+				"navigationStyle": "custom",
+				"app-plus": {
+					"bounce": "none"
+				}
+			}
+		},
+		{//创建钱包
+			"path": "pages/createWallet/createWallet",
+			"style": {
+				"navigationBarTitleText": "创建钱包",
+				"navigationStyle": "custom"
+			}
+		},
+		{//备份钱包
+			"path": "pages/createWallet/backupWallet",
+			"style": {
+				"navigationBarTitleText": "备份钱包"
+			}
+		},
+		{//备份钱包 备份助记词1
+			"path": "pages/createWallet/copyMnemonic1",
+			"style": {
+				"navigationBarTitleText": "备份助记词"
+			}
+		},
+		{//备份钱包 备份助记词2
+			"path": "pages/createWallet/copyMnemonic2",
+			"style": {
+				"navigationBarTitleText": "备份助记词"
+			}
+		},
+		{//隐私条款
+			"path": "pages/Profile/rivacy",
+			"style": {
+				"navigationBarTitleText": "隐私条款"
+			}
+		},
+		{//钱包 抵押资源
+			"path": "pages/Wallet/mortgage",
+			"style": {
+				"navigationBarTitleText": "GAME"
+			}
+		},
+		{//钱包 币种管理
+			"path": "pages/Wallet/currency",
+			"style": {
+				"navigationBarTitleText": "币种管理"
+			}
+		},
+		{//钱包 管理钱包
+			"path": "pages/Wallet/manageWallet",
+			"style": {
+				"navigationBarTitleText": "管理钱包"
+			}
+		},
+		{//钱包 导入钱包
+			"path": "pages/Wallet/importWallet",
+			"style": {
+				"navigationBarTitleText": "导入钱包"
+			}
+		},
+		{//钱包 交易记录
+			"path": "pages/Wallet/Transaction/transaction",
+			"style": {
+				"navigationBarTitleText": "交易记录",
+				"app-plus": {
+					"bounce": "none"
+				}
+			}
+		},
+		{//钱包 交易详情
+			"path": "pages/Wallet/Transaction/transactionDetail",
+			"style": {
+				"navigationBarTitleText": "交易详情"
+			}
+		},
+		{//钱包 转入
+			"path": "pages/Wallet/Transaction/into",
+			"style": {
+				"navigationBarTitleText": "转入",
+				"app-plus": {
+					"bounce":"none"
+				}
+			}
+		},
+		{//钱包 转出
+			"path": "pages/Wallet/Transaction/out",
+			"style": {
+				"navigationBarTitleText": "转出",
+				"app-plus": {
+					"titleNView":  {
+						"buttons": [ //自定义按钮
+							{ //日期选择
+								"text": "\ue621",
+								"fontSrc": "/static/iconfont/iconfont.ttf",
+								"fontSize": "15px",
+								"color": "#009494"
+							}
+						]
+					}
+				}
+			}
+		},
+		{//钱包 转出1
+			"path": "pages/Wallet/Transaction/out1",
+			"style": {
+				"navigationBarTitleText": "支付"
+			}
+		},
+		{//发现
+			"path": "pages/Find/find1",
+			"style": {
+				"navigationBarTitleText": "",
+				"navigationStyle": "custom"
+			}
+		},
+		{//DAPP
+			"path": "pages/Find/web-view",
+			"style": {
+				"navigationBarTitleText": ""
+			}
+		},
+		{//发现 节点投票
+			"path": "pages/Find/Vote/vote",
+			"style": {
+				"navigationBarTitleText": "",
+				"navigationStyle": "custom"
+			}
+		},
+		{//发现 节点投票 投票
+			"path": "pages/Find/Vote/vote2",
+			"style": {
+				"navigationBarTitleText": "投票",
+				"navigationStyle": "custom"
+			}
+		},
+		{//发现 节点投票 投票记录
+			"path": "pages/Find/Vote/voteRecords",
+			"style": {
+				"navigationBarTitleText": "投票记录"
+			}
+		},
+		{//发现 节点投票 节点管理
+			"path": "pages/Find/Vote/myNode",
+			"style": {
+				"navigationBarTitleText": "我的节点",
+				"app-plus": {
+					"bounce": "none"
+				}
+			}
+		},
+		{//发现
+			"path": "pages/Find/Vote/changeImage2",
+			"style": {
+				"navigationBarTitleText": ""
+			}
+		},
+		{//发现 节点投票 节点管理 节点详情
+			"path": "pages/Find/Vote/myNodeDetail",
+			"style": {
+				"navigationBarTitleText": "节点详情"
+			}
+		},
+		{//发现 节点投票 节点管理 导入节点
+			"path": "pages/Find/Vote/importNode",
+			"style": {
+				"navigationBarTitleText": "导入节点"
+			}
+		},
+		{//发现 一键发币
+			"path": "pages/Find/Onekey/onekey",
+			"style": {
+				"navigationBarTitleText": "一键发币"
+			}
+		},
+		{//我的
+			"path": "pages/Profile/profile",
+			"style": {
+				"navigationBarTitleText": "",
+				"navigationStyle": "custom"
+			}
+		},
+		{//我的 地址簿
+			"path": "pages/Profile/address",
+			"style": {
+				"navigationBarTitleText": "地址簿",
+				"app-plus": {
+					"bounce": "none"
+				}
+			}
+		},
+		{//我的 新增地址
+			"path": "pages/Profile/newAddress",
+			"style": {
+				"navigationBarTitleText": "新增地址"
+			}
+		},
+		{//我的 钱包管理
+			"path": "pages/Profile/Manage/manage",
+			"style": {
+				"navigationBarTitleText": ""
+			}
+		},
+		{//我的 帮助中心
+			"path": "pages/Profile/help",
+			"style": {
+				"navigationBarTitleText": "帮助中心"
+			}
+		},
+		{//我的 用户协议
+			"path": "pages/Profile/agreement",
+			"style": {
+				"navigationBarTitleText": "用户协议"
+			}
+		},
+		{//我的 关于我们
+			"path": "pages/Profile/aboutUs",
+			"style": {
+				"navigationBarTitleText": "关于我们"
+			}
+		},
+		{//我的 钱包管理 修改密码
+			"path": "pages/Profile/Manage/psw",
+			"style": {
+				"navigationBarTitleText": "修改密码"
+			}
+		},
+		{//我的 钱包管理 修改密码 忘记密码
+			"path": "pages/Profile/Manage/forgetPsw",
+			"style": {
+				"navigationBarTitleText": "忘记密码"
+			}
+		}
+	],
+	"globalStyle": {
+		"navigationBarBackgroundColor": "#FFFFFF",
+		"navigationBarTextStyle": "black",
+		"navigationBarTitleText": "GAME"
+	},
+	"tabBar": {
+		"color": "#CCCCCC",
+		"selectedColor": "#009494",
+		"backgroundColor": "#ffffff",
+		"borderStyle": "black",
+		"fontSize":"11px",
+		"iconWidth": "25px",
+		"spacing":"5px",
+		"list": [
+			{
+				"pagePath": "pages/Wallet/wallet",
+				"iconPath": "static/tabbar_imgs/wallet_0.png",
+				"selectedIconPath": "static/tabbar_imgs/wallet_1.png",
+				"text": "钱包"
+			},
+			{
+				"pagePath": "pages/Find/find1",
+				"iconPath": "static/tabbar_imgs/find_0.png",
+				"selectedIconPath": "static/tabbar_imgs/find_1.png",
+				"text": "发现"
+			},
+			{
+				"pagePath": "pages/Profile/profile",
+				"iconPath": "static/tabbar_imgs/profile_0.png",
+				"selectedIconPath": "static/tabbar_imgs/profile_1.png",
+				"text": "我的"
+			}
+		]
+	}
+}
