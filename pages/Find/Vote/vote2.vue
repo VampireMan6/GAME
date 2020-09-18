@@ -69,7 +69,7 @@
 
 <script>
 	import { Api,JsonRpc } from 'eosjs'
-	import { url } from '@/common/js/api'
+	import { url,url2 } from '@/common/js/api'
 	import {JsSignatureProvider} from 'eosjs/dist/eosjs-jssig'
 	import { TextDecoder, TextEncoder } from 'text-encoding'
 	// import fetch from 'node-fetch';
@@ -189,7 +189,7 @@
 				});
 				const priv = this.privateKey;
 				const signatureProvider = new JsSignatureProvider([priv]);
-				const rpc = new JsonRpc('http://8.210.114.177:8080');
+				const rpc = new JsonRpc(url);
 				const api = new Api({rpc,signatureProvider,textDecoder: new TextDecoder(), textEncoder: new TextEncoder() })
 				const result = await api.transact({
 					"actions": [{
@@ -224,7 +224,7 @@
 			},
 			toupiao() {
 				uni.request({
-					url: 'http://8.210.111.105:7001/vote/submit',
+					url: url2 + 'vote/submit',
 					method: 'POST',
 					data: {
 						"owner": this.account_name,
@@ -232,7 +232,6 @@
 						"ticket": this.totle_number
 					},
 					success: (res) => {
-						console.log(res)
 						if(res.data.code == 200) {
 							uni.showToast({
 								title: "投票完成",

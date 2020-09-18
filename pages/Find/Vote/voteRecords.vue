@@ -16,6 +16,8 @@
 </template>
 
 <script>
+import { url2 } from '@/common/js/api'
+	
 	export default {
 		onLoad() {
 			let i = uni.getStorageSync('accountIndex');//账户下标选择
@@ -45,7 +47,7 @@
 		methods: {
 			voteRecord() {
 				uni.request({
-					url: 'http://8.210.111.105:7001/vote/details',
+					url: url2 + 'vote/details',
 					method: 'POST',
 					data: {
 						"owner": this.account_name,
